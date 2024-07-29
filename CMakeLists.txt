@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(argos_interface)
+project(collective_decision_making)
 
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)
@@ -28,15 +28,21 @@ find_package(std_msgs REQUIRED)
 
 
 set(msg_files
+  "msg/Blob.msg"
+  "msg/BlobList.msg"
   "msg/Proximity.msg"
   "msg/ProximityList.msg"
-  "msg/Puck.msg"
-  "msg/PuckList.msg"
+  "msg/Light.msg"
+  "msg/LightList.msg"
+  "msg/Position.msg"
+  "msg/Packet.msg"
+  "msg/PacketList.msg"
+  
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}
-    DEPENDENCIES builtin_interfaces std_msgs
+    DEPENDENCIES builtin_interfaces std_msgs geometry_msgs
 
 )
 

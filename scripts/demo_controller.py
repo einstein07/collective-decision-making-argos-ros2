@@ -6,12 +6,12 @@ The algorithm implemented here is a simple state machine designed to push
 pucks to the walls.  If the proximity sensor detects an obstacle (other robot
 or wall) then it moves away from it for a fixed period.
 """
-import rospy
-import math, random
-from argos_bridge.msg import Puck
-from argos_bridge.msg import PuckList
-from argos_bridge.msg import Proximity
-from argos_bridge.msg import ProximityList
+import rclpy
+import math, random, sys
+from argos_interface.msg import Puck
+from argos_interface.msg import PuckList
+from argos_interface.msg import Proximity
+from argos_interface.msg import ProximityList
 from geometry_msgs.msg import Twist
 
 class DemoController:
@@ -27,10 +27,13 @@ class DemoController:
     MAX_FORWARD_SPEED = 1
     MAX_ROTATION_SPEED = 2.5
 
-    def __init__(self):
-        self.cmdVelPub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
-        rospy.Subscriber('puck_list', PuckList, self.pucks_callback)
-        rospy.Subscriber('proximity', ProximityList, self.prox_callback)
+    def __init__(self, node):
+        #self.cmdVelPub = rclpy.Publisher('cmd_vel', Twist, queue_size=1)
+        self.cmdVelPub = node.create_publisher(Twist, '/cmd_vel', 1)
+        #rclpy.Subscriber('puck_list', PuckList, self.pucks_callback)
+        #rclpy.Subscriber('proximity', ProximityList, self.prox_callback)
+        node.create_subscription(PuckList, '/puck_list', self.pucks_callback, 1)
+        node.create_subscription(ProximityList, '/proximity', self.prox_callback, 1)
 
     def pucks_callback(self, puckList):
         # All the action happens in 'prox_callback'.  Just store this most
@@ -85,7 +88,7 @@ class DemoController:
         #
         # Handle state actions
         #
-        print "State: " + self.state
+        print ("State: " + self.state)
         twist = None
         if self.state == "AVOID":
             if closestObs == None:
@@ -127,8 +130,8 @@ class DemoController:
             # Turn left
             w = self.MAX_ROTATION_SPEED
         twist = Twist()
-        twist.linear.x = v
-        twist.angular.z = w
+        twist.linear.x = float(v)
+        twist.angular.z = float(w)
         return twist
 
     def twistRandom(self):
@@ -138,6 +141,7 @@ class DemoController:
         return twist
 
 if __name__ == '__main__':
-    rospy.init_node("demo_controller")
-    controller = DemoController()
-    rospy.spin()
+    rclpy.init(args=sys.argv)
+    node = rclpy.create_node('demo_controller')
+    controller = DemoController(node)
+    rclpy.spin(node)
