@@ -86,7 +86,7 @@ class ArgosRosFootbot : public CCI_Controller{
 		/* Pointer to the foot-bot light sensor */
 		CCI_FootBotLightSensor* m_pcLight;
 		/* Pointer to the LEDs actuator */
-		//CCI_LEDsActuator* m_pcLEDs;
+		CCI_LEDsActuator* m_pcLEDs;
 		/* Pointer to the omnidirectional camera sensor */
 		CCI_ColoredBlobOmnidirectionalCameraSensor* m_pcCamera;
 		/* Pointer to proximity sensor */

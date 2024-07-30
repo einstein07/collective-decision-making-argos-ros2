@@ -83,7 +83,7 @@ void ArgosRosFootbot::Init(TConfigurationNode& t_node){
 	 ********************************/
 	m_pcLight  		= GetSensor < CCI_FootBotLightSensor					>("footbot_light");
 	m_pcProximity 	= GetSensor < CCI_FootBotProximitySensor				>("footbot_proximity");
-	//m_pcLEDs   = GetActuator<CCI_LEDsActuator                          >("leds");
+	m_pcLEDs   		= GetActuator<CCI_LEDsActuator                          >("leds");
 	m_pcCamera 		= GetSensor < CCI_ColoredBlobOmnidirectionalCameraSensor>("colored_blob_omnidirectional_camera");
 	m_pcPosition 	= GetSensor < CCI_PositioningSensor						>("positioning");
 	m_pcRABS 		= GetSensor < CCI_RangeAndBearingSensor					>("range_and_bearing" );
@@ -296,7 +296,7 @@ void ArgosRosFootbot::Reset() {
    /* Enable camera filtering */
    m_pcCamera->Enable();
    /* Set beacon color to all red to be visible for other robots */
-   /*m_pcLEDs->SetSingleColor(12, CColor::RED);*/
+   m_pcLEDs->SetSingleColor(12, CColor::RED);
 }
 
 void ArgosRosFootbot::cmdVelCallback(const Twist& twist) {
