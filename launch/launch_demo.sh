@@ -5,7 +5,7 @@
 # launch file.
 
 # The number of robots.  This should match the 'quantity' value in the argos world file (e.g. argos_worlds/demo.argos).
-n=15
+n=20
 
 LAUNCH_FILE=/tmp/argos_interface.launch.xml
 

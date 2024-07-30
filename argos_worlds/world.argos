@@ -101,8 +101,8 @@
     <distribute>
       <position method="uniform" min="-1,-19,0" max="1,-18.5,0" />
       <orientation method="gaussian" mean="0,0,0" std_dev="360,0,0" />
-      <entity quantity="15" max_trials="100">
-        <foot-bot id="bot" rab_range="40" omnidirectional_camera_aperture="89.99" >
+      <entity quantity="20" max_trials="100">
+        <foot-bot id="bot" rab_range="100" omnidirectional_camera_aperture="89.99" >
           <controller config="argos_ros_bot" />
         </foot-bot>
       </entity>
