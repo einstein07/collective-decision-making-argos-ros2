@@ -33,7 +33,7 @@ std::shared_ptr<rclcpp::Node> ArgosRosFootbot::nodeHandle = initNode();
 ArgosRosFootbot::ArgosRosFootbot() :
 		m_pcWheels(NULL),
 		m_pcLight(NULL),
-		//m_pcLEDs(NULL),
+		m_pcLEDs(NULL),
 		m_pcCamera(NULL),
 		m_pcProximity(NULL),
 		m_pcPosition(NULL),
@@ -65,9 +65,10 @@ void ArgosRosFootbot::Init(TConfigurationNode& t_node){
 	/*********************************
 	 * Create subscribers
 	 ********************************/
-	stringstream cmdVelTopic, cmdRabTopic;
+	stringstream cmdVelTopic, cmdRabTopic, cmdLedTopic;
 	cmdVelTopic 	<< "/" << GetId() << "/cmd_vel";
 	cmdRabTopic		<< "/" << GetId() << "/cmd_rab";
+	cmdLedTopic		<< "/" << GetId() << "/cmd_led";
 	cmdVelSubscriber_ = ArgosRosFootbot::nodeHandle -> create_subscription<Twist>(
 						cmdVelTopic.str(),
 						1,
@@ -77,6 +78,11 @@ void ArgosRosFootbot::Init(TConfigurationNode& t_node){
 						cmdRabTopic.str(),
 						1,
 						std::bind(&ArgosRosFootbot::cmdRabCallback, this, _1)
+						);
+	cmdLedSubscriber_ = ArgosRosFootbot::nodeHandle -> create_subscription<Led>(
+						cmdLedTopic.str(),
+						1,
+						std::bind(&ArgosRosFootbot::cmdLedCallback, this, _1)
 						);
 	/********************************
 	 * Get sensor/actuator handles
@@ -295,8 +301,10 @@ void ArgosRosFootbot::ControlStep() {
 void ArgosRosFootbot::Reset() {
    /* Enable camera filtering */
    m_pcCamera->Enable();
+   /** Set the LED intensity first */
+   m_pcLEDs -> SetAllIntensities( 100 );
    /* Set beacon color to all red to be visible for other robots */
-   m_pcLEDs->SetSingleColor(12, CColor::RED);
+   m_pcLEDs->SetAllColors(CColor::RED);
 }
 
 void ArgosRosFootbot::cmdVelCallback(const Twist& twist) {
@@ -352,7 +360,19 @@ void ArgosRosFootbot::cmdRabCallback(const Packet& packet){
 		m_pcRABA -> SetData(5, 0);
 	}*/
 }
+void ArgosRosFootbot::cmdLedCallback(const Led& ledColor){
+	cout << " Received the following color: " << ledColor.color << std::endl;
+	if ( ledColor.color == "yellow" ){
+		m_pcLEDs->SetAllColors(CColor::ORANGE);
+		cout << GetId() << " setting leds to yellow." << std::endl;
+	}
+	else if ( ledColor.color == "green" ){
+		m_pcLEDs->SetAllColors(CColor::CYAN);
+		cout << GetId() << " setting leds to green." << std::endl;
+	}
 
+
+}
 bool ArgosRosFootbot::isSigned(float num)
 {
 	return num<0; //std::is_signed<decltype(num)>::value ;
