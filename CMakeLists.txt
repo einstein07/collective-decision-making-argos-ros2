@@ -28,6 +28,7 @@ find_package(std_msgs REQUIRED)
 
 
 set(msg_files
+  "msg/Led.msg"
   "msg/Blob.msg"
   "msg/BlobList.msg"
   "msg/Proximity.msg"

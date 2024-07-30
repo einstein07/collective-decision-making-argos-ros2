@@ -46,6 +46,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "std_msgs/msg/bool.hpp"
+#include "collective_decision_making/msg/led.hpp"
 #include "collective_decision_making/msg/light_list.hpp"
 #include "collective_decision_making/msg/blob_list.hpp"
 #include "collective_decision_making/msg/proximity_list.hpp"
@@ -77,6 +78,10 @@ class ArgosRosFootbot : public CCI_Controller{
 		rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmdVelSubscriber_;
 		// Subscriber for cmd_rab (Packet) topic
 		rclcpp::Subscription<collective_decision_making::msg::Packet>::SharedPtr cmdRabSubscriber_;
+		// Subscriber for cmd_led (Led) topic
+		rclcpp::Subscription<collective_decision_making::msg::Led>::SharedPtr cmdLedSubscriber_;
+
+
 
 		rclcpp::TimerBase::SharedPtr timer_;
 
@@ -86,7 +91,7 @@ class ArgosRosFootbot : public CCI_Controller{
 		/* Pointer to the foot-bot light sensor */
 		CCI_FootBotLightSensor* m_pcLight;
 		/* Pointer to the LEDs actuator */
-		//CCI_LEDsActuator* m_pcLEDs;
+		CCI_LEDsActuator* m_pcLEDs;
 		/* Pointer to the omnidirectional camera sensor */
 		CCI_ColoredBlobOmnidirectionalCameraSensor* m_pcCamera;
 		/* Pointer to proximity sensor */
@@ -163,6 +168,10 @@ class ArgosRosFootbot : public CCI_Controller{
 		 * The callback method for getting new commanded packet on the cmd_packet topic.
 		 */
 		void cmdRabCallback(const collective_decision_making::msg::Packet& packet);
+		/*
+		 * The callback method for getting new commanded led color on the cmd_led topic.
+		 */
+		void cmdLedCallback(const collective_decision_making::msg::Led& ledColor);
 
 		static bool isSigned(float num);
 
