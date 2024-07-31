@@ -1,4 +1,4 @@
-find_package(collective_decision_making REQUIRED)
+find_package(passive_communication REQUIRED)
 
 add_library(argos_ros_bot argos_ros_footbot.h argos_ros_footbot.cpp)
 
@@ -12,7 +12,7 @@ target_link_libraries(argos_ros_bot
   
 ament_export_dependencies(rosidl_default_runtime rclcpp std_msgs message_runtime collective_decision_making)
 
-ament_target_dependencies(argos_ros_bot rclcpp geometry_msgs std_msgs ARGoS collective_decision_making)
+ament_target_dependencies(argos_ros_bot rclcpp geometry_msgs std_msgs ARGoS passive_communication)
 
 install(
     TARGETS argos_ros_bot

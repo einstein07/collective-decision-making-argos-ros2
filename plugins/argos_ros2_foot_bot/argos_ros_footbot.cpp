@@ -9,8 +9,8 @@
 /* Include the controller definition */
 #include "argos_ros_footbot.h"
 using namespace std;
-using namespace collective_decision_making;
-using namespace collective_decision_making::msg;
+using namespace passive_communication;
+using namespace passive_communication::msg;
 using namespace geometry_msgs::msg;
 using std::placeholders::_1;
 

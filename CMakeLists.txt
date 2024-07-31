@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(collective_decision_making)
+project(passive_communication)
 
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)

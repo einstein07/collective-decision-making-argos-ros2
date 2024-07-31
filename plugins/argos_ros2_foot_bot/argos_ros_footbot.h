@@ -46,13 +46,13 @@
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "std_msgs/msg/bool.hpp"
-#include "collective_decision_making/msg/led.hpp"
-#include "collective_decision_making/msg/light_list.hpp"
-#include "collective_decision_making/msg/blob_list.hpp"
-#include "collective_decision_making/msg/proximity_list.hpp"
-#include "collective_decision_making/msg/position.hpp"
-#include "collective_decision_making/msg/packet.hpp"
-#include "collective_decision_making/msg/packet_list.hpp"
+#include "passive_communication/msg/led.hpp"
+#include "passive_communication/msg/light_list.hpp"
+#include "passive_communication/msg/blob_list.hpp"
+#include "passive_communication/msg/proximity_list.hpp"
+#include "passive_communication/msg/position.hpp"
+#include "passive_communication/msg/packet.hpp"
+#include "passive_communication/msg/packet_list.hpp"
 
 using namespace argos;
 using namespace std::chrono_literals;
@@ -61,15 +61,15 @@ using namespace std::chrono_literals;
 class ArgosRosFootbot : public CCI_Controller{
 	private:
 		// Light list publisher
-		rclcpp::Publisher<collective_decision_making::msg::LightList>::SharedPtr lightListPublisher_;
+		rclcpp::Publisher<passive_communication::msg::LightList>::SharedPtr lightListPublisher_;
 		// Proximity sensor publisher
-		rclcpp::Publisher<collective_decision_making::msg::ProximityList>::SharedPtr promixityPublisher_;
+		rclcpp::Publisher<passive_communication::msg::ProximityList>::SharedPtr promixityPublisher_;
 
-		rclcpp::Publisher<collective_decision_making::msg::BlobList>::SharedPtr blobPublisher_;
+		rclcpp::Publisher<passive_communication::msg::BlobList>::SharedPtr blobPublisher_;
 		// Position sensor publisher
-		rclcpp::Publisher<collective_decision_making::msg::Position>::SharedPtr positionPublisher_;
+		rclcpp::Publisher<passive_communication::msg::Position>::SharedPtr positionPublisher_;
 		// Position sensor publisher
-		rclcpp::Publisher<collective_decision_making::msg::PacketList>::SharedPtr rabPublisher_;
+		rclcpp::Publisher<passive_communication::msg::PacketList>::SharedPtr rabPublisher_;
 
 		/************************************
 		 * Subscribers
@@ -77,9 +77,9 @@ class ArgosRosFootbot : public CCI_Controller{
 		// Subscriber for cmd_vel (Twist message) topic.
 		rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmdVelSubscriber_;
 		// Subscriber for cmd_rab (Packet) topic
-		rclcpp::Subscription<collective_decision_making::msg::Packet>::SharedPtr cmdRabSubscriber_;
+		rclcpp::Subscription<passive_communication::msg::Packet>::SharedPtr cmdRabSubscriber_;
 		// Subscriber for cmd_led (Led) topic
-		rclcpp::Subscription<collective_decision_making::msg::Led>::SharedPtr cmdLedSubscriber_;
+		rclcpp::Subscription<passive_communication::msg::Led>::SharedPtr cmdLedSubscriber_;
 
 
 
@@ -167,11 +167,11 @@ class ArgosRosFootbot : public CCI_Controller{
 		/*
 		 * The callback method for getting new commanded packet on the cmd_packet topic.
 		 */
-		void cmdRabCallback(const collective_decision_making::msg::Packet& packet);
+		void cmdRabCallback(const passive_communication::msg::Packet& packet);
 		/*
 		 * The callback method for getting new commanded led color on the cmd_led topic.
 		 */
-		void cmdLedCallback(const collective_decision_making::msg::Led& ledColor);
+		void cmdLedCallback(const passive_communication::msg::Led& ledColor);
 
 		static bool isSigned(float num);
 
