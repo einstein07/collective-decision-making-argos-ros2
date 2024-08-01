@@ -238,6 +238,7 @@ void ArgosRosFootbot::ControlStep() {
 	const CCI_RangeAndBearingSensor::TReadings& tRabReads = m_pcRABS->GetReadings();
 	PacketList packetList;
 	packetList.n = tRabReads.size();
+	//cout << GetId() << ": received the following broadcasts: " << packetList.n << endl;
 	for (size_t i = 0; i < packetList.n; ++i) {
 		Packet packet;
 		packet.range = tRabReads[i].Range;
@@ -255,18 +256,19 @@ void ArgosRosFootbot::ControlStep() {
 
 		packet.data.push_back(x);
 		packet.data.push_back(y);*/
-		if (tRabReads[i].Data[0] > 0){
-			cout << GetId() << ": light-source-id: " << tRabReads[i].Data[0] << endl;
+		//if (tRabReads[i].Data[0] > 0){
+			//cout << GetId() << ": light-source-id: " << tRabReads[i].Data[0] << endl;
 			packet.data.push_back(tRabReads[i].Data[0]);
 			packet.data.push_back(tRabReads[i].Data[1]);
 
 			packetList.packets.push_back(packet);
-		}
+		//}
 		//cout << GetId() << ": id: " << tRabReads[i].Data[1] << endl;
 	}
 
 	rabPublisher_ -> publish(packetList);
-	m_pcRABA -> ClearData();
+	//m_pcRABA -> ClearData();
+	//m_pcRABS -> Reset();
 	/* Get the camera readings */
 	/**const CCI_ColoredBlobOmnidirectionalCameraSensor::SReadings& sReadings = m_pcCamera->GetReadings();
 	BlobList blobList;
@@ -330,7 +332,7 @@ void ArgosRosFootbot::cmdVelCallback(const Twist& twist) {
 }
 
 void ArgosRosFootbot::cmdRabCallback(const Packet& packet){
-	cout << GetId() << " Packet data as received: " << packet.data[0] <<endl;
+	cout << GetId() << " Packet data as received: " << packet.data[0] << " for id: " << std::stoi( packet.id ) <<endl;
 	//m_pcRABA -> SetData(0, 1); // validity flag
 	m_pcRABA -> SetData(0, packet.data[0]);
 	m_pcRABA -> SetData(1, std::stoi( packet.id ));
@@ -361,14 +363,14 @@ void ArgosRosFootbot::cmdRabCallback(const Packet& packet){
 	}*/
 }
 void ArgosRosFootbot::cmdLedCallback(const Led& ledColor){
-	cout << " Received the following color: " << ledColor.color << std::endl;
+	//cout << " Received the following color: " << ledColor.color << std::endl;
 	if ( ledColor.color == "yellow" ){
 		m_pcLEDs->SetAllColors(CColor::ORANGE);
-		cout << GetId() << " setting leds to yellow." << std::endl;
+		//cout << GetId() << " setting leds to yellow." << std::endl;
 	}
 	else if ( ledColor.color == "green" ){
 		m_pcLEDs->SetAllColors(CColor::CYAN);
-		cout << GetId() << " setting leds to green." << std::endl;
+		//cout << GetId() << " setting leds to green." << std::endl;
 	}
 
 
