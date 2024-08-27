@@ -49,5 +49,5 @@ ament_export_include_directories(${CMAKE_SOURCE_DIR} ${ARGOS_INCLUDE_DIRS} ${GSL
 
 
 #include_directories(controllers)
-
+add_subdirectory(loop_functions)
 add_subdirectory(argos_ros2_foot_bot)
