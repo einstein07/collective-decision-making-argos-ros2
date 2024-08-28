@@ -146,6 +146,7 @@ void CTrajectoryLoopFunctions::PostStep() {
          CVector3 posLS(pcLS->GetInitPosition().GetX(), pcLS->GetInitPosition().GetY(), 0);  
          if(SquareDistance(posLS,
                            posAverage) < lightRadius_) {
+            stdd::cout << "Simulation done."
             GetSimulator().Terminate();
             
          }
