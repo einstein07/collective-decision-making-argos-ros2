@@ -206,32 +206,6 @@ void ArgosRosFootbot::ControlStep() {
 
 	positionPublisher_ -> publish(position);
 
-	/**CVector3 pos(
-				position.position.x,
-				position.position.y,
-				position.position.z
-				);
-	float r = float(blob.distance/100.0f);
-	float x = r * cos(blob.angle);
-	float y = r * sin(blob.angle);
-	float dist = std::sqrt(std::pow((2 - pos.GetX()), 2) + std::pow((18 - pos.GetY()), 2));
-
-	std::cout 	<< "calculated distance: " << dist << " measured in cm: "
-				<< blob.distance << " in meters: "
-				<< float(blob.distance/100.0f)
-				<< " angle: " << blob.angle << std::endl;
-
-	CVector2 toTarget(float(pos.GetX() + x), float(pos.GetY() + y));
-	CQuaternion toTarget3(0, x, y, 0);
-	CQuaternion prod1 = toTarget3 * tPosReads.Orientation;
-	prod1 = prod1 * tPosReads.Orientation.Conjugate();
-	float x_g = prod1.GetX() + tPosReads.Position.GetX();
-	float y_g = prod1.GetY() + tPosReads.Position.GetY();
-	std::cout 	<< "relative target- x: " << x << " y: " << y
-				<< " current position: " << pos
-				<< " Orientation: " << tPosReads.Orientation << std::endl;
-	std::cout << "global target: " << x_g << ", " << y_g << std::endl;*/
-
 	/*********************************************
 	 * Get readings from Range-And-Bearing-Sensor
 	 *********************************************/
@@ -245,47 +219,15 @@ void ArgosRosFootbot::ControlStep() {
 		packet.h_bearing = tRabReads[i].HorizontalBearing.GetValue();
 		packet.v_bearing = tRabReads[i].VerticalBearing.GetValue();
 
-		// Read out coordinates, keeping tract of signs
-		/**float x = tRabReads[i].Data[0];
-		float y = tRabReads[i].Data[1];
-		float id = tRabReads[i].Data[4];
+		
+		packet.data.push_back(tRabReads[i].Data[0]);
+		packet.data.push_back(tRabReads[i].Data[1]);
 
-		x = (tRabReads[i].Data[2] > 0) ? (-x) : x;
-		y = (tRabReads[i].Data[3] > 0) ? (-y) : y;
-
-
-		packet.data.push_back(x);
-		packet.data.push_back(y);*/
-		//if (tRabReads[i].Data[0] > 0){
-			//cout << GetId() << ": light-source-id: " << tRabReads[i].Data[0] << endl;
-			packet.data.push_back(tRabReads[i].Data[0]);
-			packet.data.push_back(tRabReads[i].Data[1]);
-
-			packetList.packets.push_back(packet);
-		//}
-		//cout << GetId() << ": id: " << tRabReads[i].Data[1] << endl;
+		packetList.packets.push_back(packet);
+		
 	}
 
 	rabPublisher_ -> publish(packetList);
-	//m_pcRABA -> ClearData();
-	//m_pcRABS -> Reset();
-	/* Get the camera readings */
-	/**const CCI_ColoredBlobOmnidirectionalCameraSensor::SReadings& sReadings = m_pcCamera->GetReadings();
-	BlobList blobList;
-	blobList.n = sReadings.BlobList.size();
-	for (size_t i = 0; i < blobList.n; ++i) {
-		Blob blob;
-		blob.distance = sReadings.BlobList[i]->Distance;
-		blob.angle = sReadings.BlobList[i]->Angle.GetValue();
-		blob.color = (sReadings.BlobList[i]->Color == CColor::RED)? "red" : "";
-
-		blobList.blobs.push_back(blob);
-
-		//cout << GetId() << ": value: " << prox.value << ": angle: " << prox.angle << endl;
-	}
-
-	blobPublisher_ -> publish(blobList);*/
-
 
 	// If we haven't heard from the subscriber in a while, set the speed to zero.
 	if (stepsSinceCallback > stopWithoutSubscriberCount) {
@@ -296,8 +238,6 @@ void ArgosRosFootbot::ControlStep() {
 	}
 	//std::cout << GetId() << ": left-wheel: " << leftSpeed << ": right-wheel: " << rightSpeed << std::endl;
 	m_pcWheels->SetLinearVelocity(leftSpeed, rightSpeed);
-
-
 }
 
 void ArgosRosFootbot::Reset() {
@@ -325,42 +265,13 @@ void ArgosRosFootbot::cmdVelCallback(const Twist& twist) {
 		leftSpeed = twist.linear.x;
 		rightSpeed = twist.linear.y;
 	}
-
-
-
 	stepsSinceCallback = 0;
 }
 
 void ArgosRosFootbot::cmdRabCallback(const Packet& packet){
-	cout << GetId() << " Packet data as received: " << packet.data[0] << " for id: " << std::stoi( packet.id ) <<endl;
-	//m_pcRABA -> SetData(0, 1); // validity flag
+	//cout << GetId() << " Packet data as received: " << packet.data[0] << " for id: " << std::stoi( packet.id ) <<endl;
 	m_pcRABA -> SetData(0, packet.data[0]);
 	m_pcRABA -> SetData(1, std::stoi( packet.id ));
-
-	/**if (isSigned(packet.data[0])){
-		m_pcRABA -> SetData(0, -packet.data[0]);
-		m_pcRABA -> SetData(2, 1);
-	}
-	else{
-		m_pcRABA -> SetData(0, packet.data[0]);
-		m_pcRABA -> SetData(2, 0);
-	}
-	if (isSigned(packet.data[1])){
-		m_pcRABA -> SetData(1, -packet.data[1]);
-		m_pcRABA -> SetData(3, 1);
-	}
-	else{
-		m_pcRABA -> SetData(3, 0);
-		m_pcRABA -> SetData(1, packet.data[1]);
-	}
-	if (isSigned(packet.data[2])){
-		m_pcRABA -> SetData(4, -packet.data[2]);
-		m_pcRABA -> SetData(5, 1);
-	}
-	else{
-		m_pcRABA -> SetData(4, packet.data[2]);
-		m_pcRABA -> SetData(5, 0);
-	}*/
 }
 void ArgosRosFootbot::cmdLedCallback(const Led& ledColor){
 	//cout << " Received the following color: " << ledColor.color << std::endl;
@@ -372,12 +283,6 @@ void ArgosRosFootbot::cmdLedCallback(const Led& ledColor){
 		m_pcLEDs->SetAllColors(CColor::CYAN);
 		//cout << GetId() << " setting leds to green." << std::endl;
 	}
-
-
-}
-bool ArgosRosFootbot::isSigned(float num)
-{
-	return num<0; //std::is_signed<decltype(num)>::value ;
 }
 
 /*
