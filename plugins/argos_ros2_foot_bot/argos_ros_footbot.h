@@ -173,9 +173,6 @@ class ArgosRosFootbot : public CCI_Controller{
 		 */
 		void cmdLedCallback(const collective_decision_making::msg::Led& ledColor);
 
-		static bool isSigned(float num);
-
-
 		static std::shared_ptr<rclcpp::Node> nodeHandle;
 
 
