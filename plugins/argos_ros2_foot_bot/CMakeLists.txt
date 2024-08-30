@@ -3,6 +3,7 @@ find_package(collective_decision_making REQUIRED)
 add_library(argos_ros_bot argos_ros_footbot.h argos_ros_footbot.cpp)
 
 target_link_libraries(argos_ros_bot
+  ${cpp_typesupport_target}
   ${ARGOS_LIBRARY_DIRS}
   ${ARGOS_LDFLAGS}
   ${rclcpp_LIBRARIES}
