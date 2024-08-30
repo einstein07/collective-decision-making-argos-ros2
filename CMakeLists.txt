@@ -55,7 +55,10 @@ rosidl_get_typesupport_target(cpp_typesupport_target
 ###########
 ## Build ##
 ###########
-
+install(
+  DIRECTORY lib/
+  DESTINATION lib
+)
 # Added for ARGoS
 #add_subdirectory(plugins)
 
