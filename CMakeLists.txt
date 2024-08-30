@@ -55,11 +55,6 @@ rosidl_get_typesupport_target(cpp_typesupport_target
 ###########
 ## Build ##
 ###########
-install(
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-    RUNTIME DESTINATION lib
-)
 # Added for ARGoS
 #add_subdirectory(plugins)
 
