@@ -5,6 +5,20 @@ std::ofstream gLogFile;
 /****************************************/
 /****************************************/
 
+/**
+ * Initialize the node before creating the publishers
+ * and subscribers. Otherwise we get a guard-error during
+ * compilation if we initialize the node after.
+ */
+std::shared_ptr<rclcpp::Node> initNode() {
+  int argc = 1;
+  char *argv = (char *) "";
+  rclcpp::init(argc, &argv);
+  
+  return std::make_shared<rclcpp::Node>("argos_ros_loop_funs_node");
+
+}
+
 /*
  * To reduce the number of waypoints stored in memory,
  * consider two robot positions distinct if they are
@@ -18,7 +32,15 @@ static const Real MIN_DISTANCE_SQUARED = MIN_DISTANCE * MIN_DISTANCE;
 /****************************************/
 /****************************************/
 
+
 void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
+   /********************************
+	 * Create the topics to publish
+	 *******************************/
+	stringstream killTopic;
+	killTopic 		<< "/" << GetId() << "/kill";
+	killPublisher_ = ArgosRosFootbot::nodeHandle -> create_publisher<uint8>(killTopic.str(), 1);
+	
    gStartTime_ = getCurrentTimeAsReadableString();
    steps_ = 0;
    try {
@@ -148,9 +170,12 @@ void CTrajectoryLoopFunctions::PostStep() {
                            posAverage) < lightRadius_) {
             std::cout << "Simulation done." << std::endl;
             GetSimulator().Terminate();
+            killPublisher_ -> publish(1);
+            rclcpp::shutdown();
             exit(0);
          }
       }
+      killPublisher_ -> publish(0);
    }
    steps_ ++;
 }

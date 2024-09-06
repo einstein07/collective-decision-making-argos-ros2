@@ -5,6 +5,12 @@
 #include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
 #include <argos3/plugins/simulator/entities/light_entity.h>
 #include "util.h"
+
+/**
+ * ROS2 Imports
+ */
+#include "rclcpp/rclcpp.hpp"
+
 using namespace argos;
 
 class CTrajectoryLoopFunctions : public CLoopFunctions {
@@ -30,12 +36,17 @@ public:
       return m_tWaypoints;
    }
 
+   static std::shared_ptr<rclcpp::Node> nodeHandle;
+
 private:
    int steps_; 
    std::string logDir_;
    int logFreq_;
    float lightRadius_;
    std::string gStartTime_;
+   // Light list publisher
+   rclcpp::Publisher<uint8>::SharedPtr killPublisher_;
+		
 
 };
 
