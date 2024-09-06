@@ -148,7 +148,7 @@ void CTrajectoryLoopFunctions::PostStep() {
                            posAverage) < lightRadius_) {
             std::cout << "Simulation done." << std::endl;
             GetSimulator().Terminate();
-            
+            exit(0);
          }
       }
    }
