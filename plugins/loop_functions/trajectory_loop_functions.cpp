@@ -37,9 +37,9 @@ void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
    /********************************
 	 * Create the topics to publish
 	 *******************************/
-	stringstream killTopic;
+	std::stringstream killTopic;
 	killTopic 		<< "/" << GetId() << "/kill";
-	killPublisher_ = ArgosRosFootbot::nodeHandle -> create_publisher<uint8>(killTopic.str(), 1);
+	killPublisher_ = CTrajectoryLoopFunctions::nodeHandle -> create_publisher<std::uint8_t>(killTopic.str(), 1);
 	
    gStartTime_ = getCurrentTimeAsReadableString();
    steps_ = 0;

@@ -9,6 +9,7 @@
 /**
  * ROS2 Imports
  */
+#include <stdint.h>
 #include "rclcpp/rclcpp.hpp"
 
 using namespace argos;
@@ -44,8 +45,7 @@ private:
    int logFreq_;
    float lightRadius_;
    std::string gStartTime_;
-   // Light list publisher
-   rclcpp::Publisher<uint8>::SharedPtr killPublisher_;
+   rclcpp::Publisher<std::uint8_t>::SharedPtr killPublisher_;
 		
 
 };
