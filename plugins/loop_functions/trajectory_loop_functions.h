@@ -5,12 +5,13 @@
 #include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
 #include <argos3/plugins/simulator/entities/light_entity.h>
 #include "util.h"
+#include "plugins/argos_ros2_foot_bot/argos_ros_footbot.h"
 
 /**
  * ROS2 Imports
  */
-#include <stdint.h>
 #include "rclcpp/rclcpp.hpp"
+#include "collective_decision_making/msg/signal.hpp"
 
 using namespace argos;
 
@@ -45,7 +46,8 @@ private:
    int logFreq_;
    float lightRadius_;
    std::string gStartTime_;
-   rclcpp::Publisher<std::uint8_t>::SharedPtr killPublisher_;
+   collective_decision_making::msg::Signal signal_;
+   rclcpp::Publisher<collective_decision_making::msg::Signal>::SharedPtr killPublisher_;
 		
 
 };

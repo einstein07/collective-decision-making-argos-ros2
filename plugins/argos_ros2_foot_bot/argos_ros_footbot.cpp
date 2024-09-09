@@ -22,7 +22,7 @@ using std::placeholders::_1;
 std::shared_ptr<rclcpp::Node> initNode() {
   int argc = 1;
   char *argv = (char *) "";
-  rclcpp::init(argc, &argv);
+  if (rclcpp::get_contexts().empty()){rclcpp::init(argc, &argv);}
   
   return std::make_shared<rclcpp::Node>("argos_ros_node");
 
