@@ -38,6 +38,7 @@ set(msg_files
   "msg/Position.msg"
   "msg/Packet.msg"
   "msg/PacketList.msg"
+  "msg/Signal.msg"
   
 )
 
