@@ -13,11 +13,13 @@ std::ofstream gLogFile;
 std::shared_ptr<rclcpp::Node> initNode() {
   int argc = 1;
   char *argv = (char *) "";
-  rclcpp::init(argc, &argv);
   
+  //block until context is true
+  if (rclcpp::get_contexts().empty()){rclcpp::init(argc, &argv);}
   return std::make_shared<rclcpp::Node>("argos_ros_loop_funs_node");
 
 }
+std::shared_ptr<rclcpp::Node> CTrajectoryLoopFunctions::nodeHandle = initNode();
 
 /*
  * To reduce the number of waypoints stored in memory,
@@ -37,9 +39,10 @@ void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
    /********************************
 	 * Create the topics to publish
 	 *******************************/
+   signal_.signal = 0;
 	std::stringstream killTopic;
-	killTopic 		<< "/" << GetId() << "/kill";
-	killPublisher_ = CTrajectoryLoopFunctions::nodeHandle -> create_publisher<std::uint8_t>(killTopic.str(), 1);
+	killTopic 		<< "/kill";
+	killPublisher_ = CTrajectoryLoopFunctions::nodeHandle -> create_publisher<collective_decision_making::msg::Signal>(killTopic.str(), 1);
 	
    gStartTime_ = getCurrentTimeAsReadableString();
    steps_ = 0;
@@ -170,12 +173,15 @@ void CTrajectoryLoopFunctions::PostStep() {
                            posAverage) < lightRadius_) {
             std::cout << "Simulation done." << std::endl;
             GetSimulator().Terminate();
-            killPublisher_ -> publish(1);
+            
+            signal_.signal = 1;
+            std::cout << "sending kill signal" << std::endl;
+            killPublisher_ -> publish(signal_);
             rclcpp::shutdown();
             exit(0);
          }
       }
-      killPublisher_ -> publish(0);
+      killPublisher_ -> publish(signal_);
    }
    steps_ ++;
 }
