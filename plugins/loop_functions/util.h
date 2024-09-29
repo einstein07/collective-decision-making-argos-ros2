@@ -68,6 +68,10 @@ public:
      */
     static std::string gLogDirectoryname;
     /**
+     * \brief Experiment name
+     */
+    static std::string gExperimentname;
+    /**
      * \brief Log file name
      */
     static std::string gLogFilename;
