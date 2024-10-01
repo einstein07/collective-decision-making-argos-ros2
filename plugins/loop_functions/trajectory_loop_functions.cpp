@@ -51,6 +51,8 @@ void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
       
       /* Get the logs directory from XML */
       GetNodeAttribute(tLogging, "directory", Logger::gLogDirectoryname);
+      /* Get the experiment name from XML */
+      GetNodeAttribute(tLogging, "experiment_name", Logger::gExperimentname);
       /* Get the frequency of logging from XML */
       GetNodeAttribute(tLogging, "frequency", logFreq_);
       /* Get the light radius from which to terminate simulation from XML */
@@ -83,7 +85,7 @@ void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
 
 void CTrajectoryLoopFunctions::initLogging(){
 	// ==== create specific "maps" logger file
-	Logger:: gLogFilename =	"positions_" + gStartTime_ + "_" + getpidAsReadableString() + ".csv";
+	Logger:: gLogFilename =	Logger::gExperimentname + "_" + "positions_" + gStartTime_ + "_" + getpidAsReadableString() + ".csv";
 	Logger::gLogFullFilename = Logger::gLogDirectoryname + "/" + Logger::gLogFilename;
 	Logger::gRobotStateLogFile.open(Logger::gLogFullFilename.c_str());
 
@@ -91,7 +93,7 @@ void CTrajectoryLoopFunctions::initLogging(){
 		std::cout << "[CRITICAL] Cannot open \"robot state\" log file " << Logger::gLogFullFilename << "." << std::endl;
 		exit(-1);
 	}
-   std::cout << "Loop fn - Log filename: " << Logger::gLogFullFilename << std::endl;
+   std::cout << "Loop function - Log filename: " << Logger::gLogFullFilename << std::endl;
 	Logger::gRobotStateLogger = new Logger();
 	Logger::gRobotStateLogger->setLoggerFile(Logger::gRobotStateLogFile);
 	Logger::gRobotStateLogger->write("Time, ID, x, y");

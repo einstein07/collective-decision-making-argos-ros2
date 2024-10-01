@@ -12,6 +12,7 @@
 std::ofstream Logger::gRobotStateLogFile;
 Logger* Logger::gRobotStateLogger = NULL;
 std::string Logger::gLogDirectoryname;
+std::string Logger::gExperimentname;
 std::string Logger::gLogFilename;
 std::string Logger::gLogFullFilename;
 
