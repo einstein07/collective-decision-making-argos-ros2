@@ -283,6 +283,10 @@ void ArgosRosFootbot::cmdLedCallback(const Led& ledColor){
 		m_pcLEDs->SetAllColors(CColor::CYAN);
 		//cout << GetId() << " setting leds to green." << std::endl;
 	}
+	else if ( ledColor.color == "magenta" ){
+		m_pcLEDs->SetAllColors(CColor::PURPLE);
+		//cout << GetId() << " setting leds to blend." << std::endl;
+	}
 }
 
 /*
